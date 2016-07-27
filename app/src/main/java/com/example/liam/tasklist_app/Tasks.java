@@ -21,7 +21,7 @@ public class Tasks extends AppCompatActivity {
     }
 
     public void addTask(View view) {
-        Toast.makeText(this,"click successful",Toast.LENGTH_SHORT).show();
+
     }
 }
 
