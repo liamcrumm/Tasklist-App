@@ -4,8 +4,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Tasks extends AppCompatActivity {
+
+    public ArrayList<Tasks> currentTasks = new ArrayList<Tasks>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,25 +20,18 @@ public class Tasks extends AppCompatActivity {
         setContentView(R.layout.activity_tasks);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tasks, menu);
-        return true;
+    public void addTask(View view) {
+        Toast.makeText(this,"click successful",Toast.LENGTH_SHORT).show();
     }
+}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+class Task {
+    private String todo = "";
+    private Date due;
+    private int importance = 0; // 0 is not important, 1 somewhat, 2 very important
+    public Task(String todo,Date due, int importance) {
+        this.todo = todo;
+        this.due = due;
+        this.importance = importance;
     }
 }
