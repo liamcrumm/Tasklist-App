@@ -13,7 +13,7 @@ import java.util.Date;
 public class Tasks extends AppCompatActivity {
 
     public ArrayList<Tasks> currentTasks = new ArrayList<Tasks>();
-
+    public boolean yesDate = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +25,12 @@ public class Tasks extends AppCompatActivity {
     }
     public void chooseImportance(View view) {setContentView(R.layout.choose_importance);}
     public void pickDay(View view) {
-        setContentView(R.layout.choose_due_date);
+        if(!yesDate) {
+            setContentView(R.layout.choose_due_date);
+        }
+    }
+    public void setYesDate(View view) {
+        yesDate = !yesDate;
     }
 }
 

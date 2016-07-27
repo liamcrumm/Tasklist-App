@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:text="This task has a due date"
         android:layout_margin="20dp"
-        android:id="@+id/hasDate"
+        android:onClick="setYesDate"
         />
 
     <Button
