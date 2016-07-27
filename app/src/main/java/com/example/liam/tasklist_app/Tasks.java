@@ -21,7 +21,11 @@ public class Tasks extends AppCompatActivity {
     }
 
     public void addTask(View view) {
-
+        setContentView(R.layout.create_task);
+    }
+    public void chooseImportance(View view) {setContentView(R.layout.choose_importance);}
+    public void pickDay(View view) {
+        setContentView(R.layout.choose_due_date);
     }
 }
 
