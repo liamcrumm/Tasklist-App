@@ -28,6 +28,7 @@ import java.util.GregorianCalendar;
 
 public class Tasks extends AppCompatActivity {
 
+    public boolean running = true;
     public ArrayList<Task> currentTasks = new ArrayList<Task>();
     public boolean yesDate = false;
     ArrayList<String> listItems=new ArrayList<String>();
@@ -36,10 +37,39 @@ public class Tasks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(running) {
+                    int i = 0;
+                    listItems = new ArrayList<String>();
+                    while (i < currentTasks.size()) {
+                        long difference = currentTasks.get(i).due.getTime().getTime() - GregorianCalendar.getInstance().getTime().getTime();
+                        long diffMinutes = difference / (60 * 1000) % 60;
+                        long diffHours = difference / (60 * 60 * 1000) % 24;
+                        long diffDays = difference / (24 * 60 * 60 * 1000);
+                        listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) + " minutes");
+                        i++;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                    try {
+                        Thread.sleep(30000);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+            }
+        }).start();
     }
 
     public void addTask(View view) {
         currentTasks.add(0, new Task());
+        running = false;
         setContentView(R.layout.create_task);
     }
     public void chooseImportance(View view) {
@@ -74,19 +104,20 @@ public class Tasks extends AppCompatActivity {
     public void updateTasks() {
         listItems = new ArrayList<String>();
         int i = 0;
-        while(i < currentTasks.size()) {
-            long difference = currentTasks.get(0).due.getTime().getTime()-GregorianCalendar.getInstance().getTime().getTime();
+        while (i < currentTasks.size()) {
+            long difference = currentTasks.get(0).due.getTime().getTime() - GregorianCalendar.getInstance().getTime().getTime();
             long diffMinutes = difference / (60 * 1000) % 60;
             long diffHours = difference / (60 * 60 * 1000) % 24;
             long diffDays = difference / (24 * 60 * 60 * 1000);
-            listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) +" minutes");
+            listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) + " minutes");
             i++;
         }
-        adapter=new ArrayAdapter<String>(this,
+        adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 listItems);
-        ((ListView)findViewById(R.id.listView)).setAdapter(adapter);
+        ((ListView) findViewById(R.id.listView)).setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        running = true;
     }
 }
 
@@ -94,16 +125,19 @@ class Task {
     public String todo = "";
     public GregorianCalendar due;
     public int importance = 0; // 0 is not important, 1 somewhat, 2 very important
-    public Task(String todo,GregorianCalendar due, int importance) {
+
+    public Task(String todo, GregorianCalendar due, int importance) {
         this.todo = todo;
         this.due = due;
         this.importance = importance;
     }
+
     public Task() {
         this.todo = "";
         this.due = null;
         this.importance = -1;
     }
+
     public String toString() {
         return "The task is to " + todo + " with an importance level of " + importance
                 + " before " + due.getTime().toString();
