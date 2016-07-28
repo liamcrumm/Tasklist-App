@@ -21,8 +21,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -43,8 +45,13 @@ public class Tasks extends AppCompatActivity {
                 while(running) {
                     int i = 0;
                     listItems = new ArrayList<String>();
+                    Collections.sort(currentTasks);
                     while (i < currentTasks.size()) {
-                        long difference = currentTasks.get(i).due.getTime().getTime() - GregorianCalendar.getInstance().getTime().getTime();
+                        long difference = currentTasks.get(i).due.getTimeInMillis() - GregorianCalendar.getInstance().getTimeInMillis();
+                        if (difference<=30000) {
+                            currentTasks.remove(i);
+                            continue;
+                        }
                         long diffMinutes = difference / (60 * 1000) % 60;
                         long diffHours = difference / (60 * 60 * 1000) % 24;
                         long diffDays = difference / (24 * 60 * 60 * 1000);
@@ -104,8 +111,13 @@ public class Tasks extends AppCompatActivity {
     public void updateTasks() {
         listItems = new ArrayList<String>();
         int i = 0;
+        Collections.sort(currentTasks);
         while (i < currentTasks.size()) {
-            long difference = currentTasks.get(0).due.getTime().getTime() - GregorianCalendar.getInstance().getTime().getTime();
+            long difference = currentTasks.get(i).due.getTimeInMillis() - GregorianCalendar.getInstance().getTimeInMillis();
+            if (difference<=30000) {
+                currentTasks.remove(i);
+                continue;
+            }
             long diffMinutes = difference / (60 * 1000) % 60;
             long diffHours = difference / (60 * 60 * 1000) % 24;
             long diffDays = difference / (24 * 60 * 60 * 1000);
@@ -121,7 +133,7 @@ public class Tasks extends AppCompatActivity {
     }
 }
 
-class Task {
+class Task implements Comparable {
     public String todo = "";
     public GregorianCalendar due;
     public int importance = 0; // 0 is not important, 1 somewhat, 2 very important
@@ -136,6 +148,24 @@ class Task {
         this.todo = "";
         this.due = null;
         this.importance = -1;
+    }
+
+    @Override
+    public int compareTo(Object task) {
+        Task t = (Task)task;
+        if(t.importance > importance) {
+            return 1;
+        } else if(importance > t.importance) {
+            return -1;
+        } else {
+            if(t.due.getTimeInMillis() < due.getTimeInMillis()) {
+                return 1;
+            } else if (t.due.getTimeInMillis() < due.getTimeInMillis()) {
+                return -1;
+            } else {
+                return todo.compareTo(t.todo);
+            }
+        }
     }
 
     public String toString() {
