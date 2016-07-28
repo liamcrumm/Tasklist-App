@@ -2,14 +2,22 @@ package com.example.liam.tasklist_app;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.HorizontalScrollView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -22,6 +30,8 @@ public class Tasks extends AppCompatActivity {
 
     public ArrayList<Task> currentTasks = new ArrayList<Task>();
     public boolean yesDate = false;
+    ArrayList<String> listItems=new ArrayList<String>();
+    ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,11 +39,8 @@ public class Tasks extends AppCompatActivity {
     }
 
     public void addTask(View view) {
-        currentTasks.add(0,new Task());
+        currentTasks.add(0, new Task());
         setContentView(R.layout.create_task);
-    }
-    public void setImportance(View view) {
-        currentTasks.get(0).importance = 2131492944-view.getId();
     }
     public void chooseImportance(View view) {
         currentTasks.get(0).todo = ((EditText)findViewById(R.id.task_description)).getText().toString();
@@ -58,11 +65,28 @@ public class Tasks extends AppCompatActivity {
     }
     public void registerTask(View view) {
         GregorianCalendar temp = currentTasks.get(0).due;
-        currentTasks.get(0).due = new GregorianCalendar(temp.YEAR,temp.MONTH,temp.DAY_OF_MONTH,
+        currentTasks.get(0).due = new GregorianCalendar(temp.get(temp.YEAR),temp.get(temp.MONTH),temp.get(temp.DAY_OF_MONTH),
                 ((TimePicker)findViewById(R.id.time)).getHour(),
                 ((TimePicker)findViewById(R.id.time)).getMinute());
-        System.out.println(currentTasks.get(0).toString());
         setContentView(R.layout.activity_tasks);
+        updateTasks();
+    }
+    public void updateTasks() {
+        listItems = new ArrayList<String>();
+        int i = 0;
+        while(i < currentTasks.size()) {
+            long difference = currentTasks.get(0).due.getTime().getTime()-GregorianCalendar.getInstance().getTime().getTime();
+            long diffMinutes = difference / (60 * 1000) % 60;
+            long diffHours = difference / (60 * 60 * 1000) % 24;
+            long diffDays = difference / (24 * 60 * 60 * 1000);
+            listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) +" minutes");
+            i++;
+        }
+        adapter=new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,
+                listItems);
+        ((ListView)findViewById(R.id.listView)).setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 }
 
