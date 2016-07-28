@@ -6,6 +6,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Task Description: "
+        android:id="@+id/task_description"
         />
     <Button
         android:layout_width="wrap_content"

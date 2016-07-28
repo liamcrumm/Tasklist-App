@@ -7,27 +7,36 @@
         android:layout_height="wrap_content"
         android:text="How important is this task?"
         android:layout_margin="20dp" />
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/choice"
+        >
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Very Important"
-        />
+        android:id="@+id/vImp" />
+
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Somewhat Important"
-        />
+        android:id="@+id/sImp" />
+
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Not Important" />
+        android:text="Not Important"
+        android:id="@+id/nImp" />
+    </RadioGroup>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="This task has a due date"
         android:layout_margin="20dp"
-        android:onClick="setYesDate"
+        android:id="@+id/due_date"
         />
 
     <Button

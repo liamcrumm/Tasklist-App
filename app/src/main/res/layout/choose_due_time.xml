@@ -5,6 +5,16 @@
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:timePickerMode="spinner"></TimePicker>
+        android:timePickerMode="spinner"
+        android:id="@+id/time">
+    </TimePicker>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:onClick="registerTask"
+        android:layout_gravity="bottom|center_horizontal"
+        android:id="@+id/continuebut" />
 
 </LinearLayout>

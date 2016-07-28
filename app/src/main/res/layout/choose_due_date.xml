@@ -7,6 +7,17 @@
         android:layout_height="wrap_content"
         android:spinnersShown="true"
         android:calendarViewShown="false"
-        android:datePickerMode="spinner">
+        android:datePickerMode="spinner"
+        android:id="@+id/calendar"
+        >
     </DatePicker>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:onClick="pickTime"
+        android:layout_gravity="bottom|center_horizontal"
+        android:id="@+id/continuebut" />
+
 </LinearLayout>
