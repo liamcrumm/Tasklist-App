@@ -23,6 +23,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +40,7 @@ public class Tasks extends AppCompatActivity {
     public boolean yesDate = false;
     ArrayList<String> listItems=new ArrayList<String>();
     ArrayAdapter<String> adapter;
+    FileOutputStream fos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,10 @@ public class Tasks extends AppCompatActivity {
                         int i = 0;
                         listItems = new ArrayList<String>();
                         Collections.sort(currentTasks);
+                        /*try {
+                            fos = openFileOutput("current_tasks", Context.MODE_PRIVATE);
+                        } catch (IOException e) {
+                        }*/
                         while (i < currentTasks.size()) {
                             long difference = currentTasks.get(i).due.getTimeInMillis() - GregorianCalendar.getInstance().getTimeInMillis();
                             if (difference <= 30000) {
