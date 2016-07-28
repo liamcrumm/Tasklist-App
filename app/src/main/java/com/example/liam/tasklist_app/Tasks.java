@@ -1,5 +1,7 @@
 package com.example.liam.tasklist_app;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -42,30 +44,42 @@ public class Tasks extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(running) {
-                    int i = 0;
-                    listItems = new ArrayList<String>();
-                    Collections.sort(currentTasks);
-                    while (i < currentTasks.size()) {
-                        long difference = currentTasks.get(i).due.getTimeInMillis() - GregorianCalendar.getInstance().getTimeInMillis();
-                        if (difference<=30000) {
-                            currentTasks.remove(i);
-                            continue;
-                        }
-                        long diffMinutes = difference / (60 * 1000) % 60;
-                        long diffHours = difference / (60 * 60 * 1000) % 24;
-                        long diffDays = difference / (24 * 60 * 60 * 1000);
-                        listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) + " minutes");
-                        i++;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
+                while(true) {
+                    while (running) {
+                        int i = 0;
+                        listItems = new ArrayList<String>();
+                        Collections.sort(currentTasks);
+                        while (i < currentTasks.size()) {
+                            long difference = currentTasks.get(i).due.getTimeInMillis() - GregorianCalendar.getInstance().getTimeInMillis();
+                            if (difference <= 30000) {
+                                currentTasks.remove(i);
+                                continue;
                             }
-                        });
+                            long diffSeconds = difference / (1000) % 60;
+                            long diffMinutes = difference / (60 * 1000) % 60;
+                            long diffHours = difference / (60 * 60 * 1000) % 24;
+                            long diffDays = difference / (24 * 60 * 60 * 1000);
+                            listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) + " minutes, " + Long.toString(diffSeconds) + " seconds");
+                            i++;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter = new ArrayAdapter<String>(Tasks.this,
+                                            android.R.layout.simple_list_item_1,
+                                            listItems);
+                                    ((ListView) findViewById(R.id.listView)).setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            break;
+                        }
                     }
                     try {
-                        Thread.sleep(30000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         break;
                     }
@@ -118,10 +132,11 @@ public class Tasks extends AppCompatActivity {
                 currentTasks.remove(i);
                 continue;
             }
+            long diffSeconds = difference / (1000) % 60;
             long diffMinutes = difference / (60 * 1000) % 60;
             long diffHours = difference / (60 * 60 * 1000) % 24;
             long diffDays = difference / (24 * 60 * 60 * 1000);
-            listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) + " minutes");
+            listItems.add(currentTasks.get(i).todo + " " + "due in " + Long.toString(diffDays) + " days, " + Long.toString(diffHours) + " hours, " + Long.toString(diffMinutes) + " minutes, " +  Long.toString(diffSeconds) +" seconds");
             i++;
         }
         adapter = new ArrayAdapter<String>(this,
